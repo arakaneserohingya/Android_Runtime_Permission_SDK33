@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--    <color name="colorAccent">#ffe81719</color>-->
+    <!--    <color name="colorPrimary">#fff43335</color>-->
+    <!--    <color name="colorPrimaryDark">#ffe81719</color>-->
+    <color name="colorAccent">#FF018786</color>
+    <color name="colorPrimary">#006666</color>
+    <color name="colorPrimaryDark">#004c4c</color>
+    <color name="colorPrimaryLight">#ffffdcdc</color>
+    <color name="color_red">#ffe81719</color>
+    <color name="coloriconGrey">#ffa9a9b0</color>
+    <color name="app_bg">#fff6f6f6</color>
+    <color name="greylight">#ff555555</color>
+    <color name="greylighter">#fff2f2f2</color>
+    <color name="shimmer_bg">#ffdddddd</color>
+
+    <color name="contact_name">#333333</color>
+    <color name="contact_number">#8c8c8c</color>
+
+    <color name="ligh_meduim_gray" >#f3f3f3</color>
+    <color name="fav_icon_tint">#CAC7C7</color>
+
+</resources>
