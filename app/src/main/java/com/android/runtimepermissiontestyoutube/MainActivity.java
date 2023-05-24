@@ -49,20 +49,25 @@ public class MainActivity extends AppCompatActivity {
         btn_check_all_permissions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                requestPermissions();
 
             }
         });
-
-
-        requestPermissions();
 
 
     }
 
     public void requestPermissions() {
 
-        if(!is_call_phone_permitted){
+        if (!is_call_phone_permitted) {
             requestPermissionCallPhone();
+        }
+        if (!is_read_contacts_permitted) {
+            requestPermissionReadContact();
+        }
+
+        if (!is_record_audio_permitted) {
+            requestPermissionRecordAudio();
         }
     }
 
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         return is_call_phone_permitted && is_read_contacts_permitted && is_record_audio_permitted;
     }
 
+    /**************Getting Phone call permission ******************/
     public void requestPermissionCallPhone() {
         if (ContextCompat.checkSelfPermission(MainActivity.this, required_permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, required_permissions[0] + "Granted");
@@ -90,20 +96,98 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private ActivityResultLauncher<String> request_permission_luncher_call_phone=
-    registerForActivityResult(new ActivityResultContracts.RequestPermission(),isGranted->{
-        if(isGranted) {
-            Log.d(TAG, required_permissions[0] + "Allowed");
-            is_call_phone_permitted = true;
-            img_deny_call.setVisibility(View.GONE);
-            img_given_call.setVisibility(View.VISIBLE);
-        }else{
-            Log.d(TAG, required_permissions[0] + "Allowed");
-            is_call_phone_permitted = false;
+    private ActivityResultLauncher<String> request_permission_luncher_call_phone =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d(TAG, required_permissions[0] + "Allowed");
+                    is_call_phone_permitted = true;
+                    img_deny_call.setVisibility(View.GONE);
+                    img_given_call.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d(TAG, required_permissions[0] + "Allowed");
+                    is_call_phone_permitted = false;
 
+                }
+
+            });
+   /**************Getting Phone call permission Ended ***************/
+
+
+
+    /**************Getting Read Contact permission ******************/
+    public void requestPermissionReadContact() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, required_permissions[1]) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, required_permissions[1] + "Granted");
+
+            is_read_contacts_permitted = true;
+            img_deny_contacts.setVisibility(View.GONE);
+            img_deny_contacts.setVisibility(View.VISIBLE);
+        } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.d(TAG, required_permissions[1] + "2nd time Dont allow handle here");
+            } else {
+                Log.d(TAG, required_permissions[1] + "Dont allow handle here");
+            }
+            //===we handle both byh below code
+            request_permission_luncher_read_contacts.launch(required_permissions[1]);
         }
 
-    });
+    }
+
+    private ActivityResultLauncher<String>  request_permission_luncher_read_contacts =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d(TAG, required_permissions[1] + "Allowed");
+                    is_read_contacts_permitted = true;
+                    img_deny_contacts.setVisibility(View.GONE);
+                    img_given_contacts.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d(TAG, required_permissions[1] + "Allowed");
+                    is_read_contacts_permitted = true;
+
+                }
+
+            });
+    /**************Getting Read Contactl permission Ended ***************/
+
+
+
+    /**************Getting Record Audio permission ******************/
+    public void requestPermissionRecordAudio() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, required_permissions[2]) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, required_permissions[2] + "Granted");
+
+            is_record_audio_permitted = true;
+            img_deny_audio.setVisibility(View.GONE);
+            img_deny_audio.setVisibility(View.VISIBLE);
+        } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.d(TAG, required_permissions[2] + "2nd time Dont allow handle here");
+            } else {
+                Log.d(TAG, required_permissions[2] + "Dont allow handle here");
+            }
+            //===we handle both byh below code
+            request_permission_luncher_record_audio.launch(required_permissions[2]);
+        }
+
+    }
+
+    private ActivityResultLauncher<String>  request_permission_luncher_record_audio =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d(TAG, required_permissions[2] + "Allowed");
+                    is_record_audio_permitted = true;
+                    img_deny_audio.setVisibility(View.GONE);
+                    img_given_audio.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d(TAG, required_permissions[2] + "Allowed");
+                    is_record_audio_permitted = true;
+
+                }
+
+            });
+    /**************Getting Record Audio permission Ended ***************/
+
 
 
 
