@@ -2,16 +2,22 @@ package com.android.runtimepermissiontestyoutube;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,22 +55,28 @@ public class MainActivity extends AppCompatActivity {
         btn_check_all_permissions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPermissions();
+               // requestPermissions();
+                if(is_all_permission_requested){
+                    Toast.makeText(MainActivity.this, "Granted All Permissions", Toast.LENGTH_SHORT).show();
+                }else{
+                    sendToSettingDialog();
+                }
 
             }
         });
 
-
+        requestPermissions();
     }
 
     public void requestPermissions() {
 
-        if (!is_call_phone_permitted) {
-            requestPermissionCallPhone();
-        }
-        if (!is_read_contacts_permitted) {
-            requestPermissionReadContact();
-        }
+//        if (!is_call_phone_permitted) {
+//            requestPermissionCallPhone();
+//        }
+//        if (!is_read_contacts_permitted) {
+//            requestPermissionReadContact();
+//        }
+
 
         if (!is_record_audio_permitted) {
             requestPermissionRecordAudio();
@@ -84,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
             is_call_phone_permitted = true;
             img_deny_call.setVisibility(View.GONE);
             img_given_call.setVisibility(View.VISIBLE);
+
+            if(is_read_contacts_permitted){
+                requestPermissionReadContact();
+            }
+
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 Log.d(TAG, required_permissions[0] + "2nd time Dont allow handle here");
@@ -184,19 +201,72 @@ public class MainActivity extends AppCompatActivity {
                     is_record_audio_permitted = true;
 
                 }
+                AllCheckPermissionFinalCall();
 
             });
+
     /**************Getting Record Audio permission Ended ***************/
 
 
 
+    private void AllCheckPermissionFinalCall() {
+        is_all_permission_requested=true;
+        if(allPermissionResultCheck())
+        {
+            Toast.makeText(this, "Granted All Permissions", Toast.LENGTH_SHORT).show();
+        }else{
+            sendToSettingDialog();
+        }
+    }
+
+    private void sendToSettingDialog() {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Alert For Permissions")
+                .setMessage("Go to setting to grant permission")
+                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent =new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri= Uri.fromParts("package",getPackageName(),null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                })
+
+               .setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               finish();
+            }
+        });
+    }
 
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(is_all_permission_requested){
+            boolean  master_check_permission=false;
+            for(int i=0;i<required_permissions.length;i++)
+            {
+                if(ContextCompat.checkSelfPermission(MainActivity.this,required_permissions[i])==PackageManager.PERMISSION_GRANTED)
+                {
+                    Log.d(TAG, "break after->"+required_permissions[i]);
+                }else{
+                    master_check_permission=true;
+                    break;
+                }
+            }
 
-
-
-
-
+            if(master_check_permission){
+                sendToSettingDialog();
+            }else{
+                Toast.makeText(this, "Granted All Permissions", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 
 
